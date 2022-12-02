@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    container_name: db_postgres_openloot_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_USER: db_admin
+      POSTGRES_DB: openloot_db
+
+  bot:
+    build: .
+    restart: always
+    command: python telega.py
+    volumes:
+      - ./code/
+    ports:
+      - 80:80
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
