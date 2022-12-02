@@ -82,7 +82,4 @@ class DataBaseEdit:
         return self.records.select_records(record)[0]
 
 
-# db = DataBaseEdit()
-# print(db.get_price_from_item('FixerSingleEye_Chest', 555248934))
-# print(db.get_price_from_item('FixerSingleEye_Chest', 431796930))
-# print(db.get_price_from_item('CrystalBlue_Title')[0])
+

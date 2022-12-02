@@ -1,4 +1,3 @@
-# from sqlalchemy.cimmutabledict import immutabledict
 from sqlalchemy.orm import Session
 from sqlalchemy_utils import create_database, database_exists
 from sqlalchemy import create_engine
@@ -17,7 +16,7 @@ class ManageDataBase:
         url = f'postgresql://{Config.DB_USER}:{Config.DB_PASS}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}'
         if not database_exists(url):
             create_database(url)
-        ManageDataBase.ENGINE = create_engine(url, echo=True) if not ManageDataBase.ENGINE else ManageDataBase.ENGINE
+        ManageDataBase.ENGINE = create_engine(url, echo=False) if not ManageDataBase.ENGINE else ManageDataBase.ENGINE
 
         self.engine = ManageDataBase.ENGINE
 
@@ -42,7 +41,7 @@ class ManageDataBase:
 
     def update_record(self, record):
         with Session(self.engine) as session:
-            session.execute(record)  # (record, execution_options=immutabledict({"synchronize_session": 'fetch'}))
+            session.execute(record)
             session.commit()
 
 

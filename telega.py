@@ -54,45 +54,9 @@ async def cmd_items_list(message: types.Message):
         await message.answer(text=item + ' - ' + str(price))
 
 
-# async def get_notifications():
-#     while True:
-#         items_dict = {}
-#         # error = False
-#         for i in range(1, 4):
-#             await asyncio.sleep(5)
-#             url = f'https://openloot.com/api/market/' \
-#                   f'options?gameId=56a149cf-f146-487a-8a1c-58dc9ff3a15c&' \
-#                   f'order=name&page={i}&pageSize=100&primary=false&sort=asc'
-#             headers = {
-#                 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0,gzip(gfe)'
-#             }
-#             try:
-#                 response = requests.get(url=url, headers=headers).json()
-#             except requests.exceptions.JSONDecodeError:
-#                 print('Нет доступа к странице -')
-#                 continue
-#             for num_item in range(len(response['items'])):
-#                 item_name = response['items'][num_item]['optionName']
-#                 item_price = response['items'][num_item]['lowestPrice']
-#                 items_dict[item_name] = item_price
-#
-#         for item in db.get_all_items_from_bd():
-#             if item in items_dict:
-#                 if db.get_price_from_item(item)[0] > items_dict[item]:
-#                     for telegram_id in db.get_telegram_id_from_item_name(item):
-#                         if db.get_notification_for_item(telegram_id, item):
-#                             db.update_notification_false(telegram_id, item)
-#                             await bot.send_message(chat_id=telegram_id,
-#                                                    text=item + ' price - ' + str(
-#                                                        items_dict[item]) + '\n' + get_url(item),
-#                                                    parse_mode='html',
-#                                                    reply_markup=get_notification_button(item))
-
-
 async def get_notifications():
     while True:
         items_dict = {}
-        # error = False
         for i in range(1, 4):
             await asyncio.sleep(5)
             url = f'https://openloot.com/api/market/' \
@@ -104,7 +68,7 @@ async def get_notifications():
             try:
                 response = requests.get(url=url, headers=headers).json()
             except requests.exceptions.JSONDecodeError:
-                print('Нет доступа к странице -')
+                # print('Нет доступа к странице -')
                 continue
             for num_item in range(len(response['items'])):
                 item_name = response['items'][num_item]['optionName']

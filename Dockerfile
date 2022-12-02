@@ -8,4 +8,4 @@ WORKDIR /code
 COPY . .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-CMD ["python", "db_connect.py"]
+CMD ["python", "database_connect.py"]

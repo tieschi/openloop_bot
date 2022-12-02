@@ -1,7 +1,4 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.callback_data import CallbackData
-
-# callback = CallbackData('item_name', 'telegram_id')
 
 
 def get_menu_btn():
