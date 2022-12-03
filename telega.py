@@ -76,7 +76,7 @@ async def get_notifications():
                 items_dict[item_name] = item_price
 
         for telegram_id in db.get_all_telegram_id():
-            for item in db.get_all_users_items(telegram_id):
+            for item in db.get_user_items(telegram_id):
                 if item in items_dict:
                     if db.get_price_from_item(item, telegram_id)[0] > items_dict[item]:
                         if db.get_notification_for_item(telegram_id, item):

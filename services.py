@@ -1,4 +1,4 @@
-from sqlalchemy import select, delete, update
+from sqlalchemy import select, delete, update, insert
 from database_connect import Users, ManageDataBase
 
 
@@ -21,7 +21,7 @@ class DataBaseEdit:
     def __init__(self):
         self.records = ManageDataBase()
 
-    def get_all_users_items(self, telegram_id):
+    def get_user_items(self, telegram_id):
         record = select(Users.item_name).where(Users.telegram_id == telegram_id)
         return self.records.select_records(record)
 
@@ -33,19 +33,23 @@ class DataBaseEdit:
         return dict(zip(items, price))
 
     def save_user_items(self, items: dict, telegram_id):
+        rows = []
+        user_items_list = self.get_user_items(telegram_id)
         for item, price in items.items():
-            if item in self.get_all_users_items(telegram_id):
+            if item in user_items_list:
                 record = update(Users).where(Users.item_name == item
                                              and Users.telegram_id == telegram_id).values(item_price=price)
                 self.records.update_record(record)
             else:
-                record = Users(
-                    telegram_id=telegram_id,
-                    item_name=item,
-                    item_price=price,
-                    notification=True
-                )
-                self.records.insert_records([record])
+                row = Users(telegram_id=telegram_id,
+                            item_name=item,
+                            item_price=price,
+                            notification=True)
+                rows.append(row)
+
+        self.records.insert_records(rows)
+
+
 
     def delete_all(self, telegram_id):
         record = delete(Users).where(Users.telegram_id == telegram_id)
@@ -80,6 +84,4 @@ class DataBaseEdit:
     def get_notification_for_item(self, telegram_id, item):
         record = select(Users.notification).where(Users.item_name == item).filter(Users.telegram_id == telegram_id)
         return self.records.select_records(record)[0]
-
-
 
