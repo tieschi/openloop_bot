@@ -16,7 +16,8 @@ class ManageDataBase:
         url = f'postgresql://{Config.DB_USER}:{Config.DB_PASS}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}'
         if not database_exists(url):
             create_database(url)
-        ManageDataBase.ENGINE = create_engine(url, echo=False) if not ManageDataBase.ENGINE else ManageDataBase.ENGINE
+        ManageDataBase.ENGINE = create_engine(url, echo=False, pool_size=30, max_overflow=15) if not  \
+            ManageDataBase.ENGINE else ManageDataBase.ENGINE
 
         self.engine = ManageDataBase.ENGINE
 
@@ -32,6 +33,7 @@ class ManageDataBase:
     def select_records(self, records):
         session = Session(self.engine)
         result = session.execute(records).all()
+        session.close()
         return list(chain(*result))
 
     def delete_records(self, records):

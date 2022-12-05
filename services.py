@@ -38,7 +38,8 @@ class DataBaseEdit:
         for item, price in items.items():
             if item in user_items_list:
                 record = update(Users).where(Users.item_name == item
-                                             and Users.telegram_id == telegram_id).values(item_price=price)
+                                             and Users.telegram_id == telegram_id).values(item_price=price,
+                                                                                          notification=True)
                 self.records.update_record(record)
             else:
                 row = Users(telegram_id=telegram_id,
@@ -48,8 +49,6 @@ class DataBaseEdit:
                 rows.append(row)
 
         self.records.insert_records(rows)
-
-
 
     def delete_all(self, telegram_id):
         record = delete(Users).where(Users.telegram_id == telegram_id)
@@ -71,14 +70,9 @@ class DataBaseEdit:
         record = select(Users.telegram_id).where(Users.item_name == item_name)
         return self.records.select_records(record)
 
-    def update_notification_false(self, telegram_id, item):
+    def update_notification(self, telegram_id, item, boole):
         record = update(Users).where(Users.item_name == item
-                                     and Users.telegram_id == telegram_id).values(notification=False)
-        self.records.update_record(record)
-
-    def update_notification_true(self, telegram_id, item):
-        record = update(Users).where(Users.item_name == item
-                                     and Users.telegram_id == telegram_id).values(notification=True)
+                                     and Users.telegram_id == telegram_id).values(notification=boole)
         self.records.update_record(record)
 
     def get_notification_for_item(self, telegram_id, item):
