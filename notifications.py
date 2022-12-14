@@ -1,10 +1,28 @@
 import requests
-from Synchronous_telega import *
-from services import DataBaseEdit
+from services import DataBaseEdit, get_url
+# from Synchronous_telega import *
 import time
 import sqlalchemy.exc
+from telebot import TeleBot
+from configs import Config
+from buttons import get_notification_button
+from threading import Timer
 
+
+bot = TeleBot(Config.TELEGRAM_TOKEN)
 db = DataBaseEdit()
+
+
+def get_notif(telegram_id, item, price):
+    bot.send_message(chat_id=telegram_id,
+                     text=item + ' price - ' + str(
+                         price) + '\n' + get_url(item),
+                     parse_mode='html',
+                     reply_markup=get_notification_button(item))
+
+
+def send_error():
+    bot.send_message(chat_id=555248934, text='notifications dropped')
 
 
 def get_all_items():
@@ -40,6 +58,9 @@ def notifications():
                         if db.get_notification_for_item(telegram_id, item):
                             db.update_notification(telegram_id, item, False)
                             get_notif(telegram_id, item, items[item])
+                    else:
+                        if not db.get_notification_for_item(telegram_id, item):
+                            db.update_notification(telegram_id, item, True)
             except sqlalchemy.exc.TimeoutError:
                 print('error')
                 send_error()
@@ -65,6 +86,6 @@ def notifications():
 #             print(response['items'][num_item]['optionName'], 0.1)
 
 
-while True:
-    notifications()
-    time.sleep(5)
+# timer = Timer(5.0, notifications)
+#
+# timer.start()

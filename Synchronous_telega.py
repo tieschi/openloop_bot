@@ -2,7 +2,8 @@ from telebot import TeleBot, types
 from configs import Config
 from services import DataBaseEdit, normalize_message, get_url
 from buttons import get_menu_btn, get_notification_button
-
+from notifications import notifications
+from threading import Timer
 
 bot = TeleBot(Config.TELEGRAM_TOKEN)
 db = DataBaseEdit()
@@ -29,7 +30,7 @@ def update_notification(message: types.CallbackQuery):
     bot.send_message(chat_id=message.from_user.id, text=f'notifications enabled for {message.data}')
 
 
-@bot.message_handler(regexp=r'\S+ (\d+$|\d\.\d+$)')
+@bot.message_handler(regexp=r'\S+ \d+')
 def save_items(message: types.Message):
     db.save_user_items(normalize_message(message.text), message.from_user.id)
     bot.send_message(chat_id=message.from_user.id, text='items added', reply_markup=get_menu_btn())
@@ -55,17 +56,14 @@ def cmd_items_list(message: types.Message):
         bot.send_message(chat_id=message.from_user.id, text=str(items_list))
 
 
-def get_notif(telegram_id, item, price):
-    bot.send_message(chat_id=telegram_id,
-                     text=item + ' price - ' + str(
-                         price) + '\n' + get_url(item),
-                     parse_mode='html',
-                     reply_markup=get_notification_button(item))
-
-
-def send_error():
-    bot.send_message(chat_id=555248934, text='notifications dropped')
+def timer(func, sec):
+    Timer(sec, func).start()
+    Timer(sec + 1, lambda: timer(func, sec)).start()
 
 
 if __name__ == '__main__':
+    timer(notifications, 4)
     bot.infinity_polling()
+
+
+
