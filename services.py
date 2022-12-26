@@ -71,7 +71,6 @@ class DataBaseEdit:
 
     def update_notification(self, telegram_id, item, boole):
         record = update(Users).where(Users.item_name == item).where(Users.telegram_id == telegram_id).values(notification=boole)
-        print(record)
         self.records.update_record(record)
 
     def get_notification_for_item(self, telegram_id, item):
@@ -81,7 +80,3 @@ class DataBaseEdit:
     def get_all_telegram_id_items_price(self):
         record = select(Users.telegram_id, Users.item_name, Users.item_price).order_by(Users.telegram_id)
         return self.records.test_select_records(record)
-
-
-test = DataBaseEdit()
-test.update_notification(317524011, 'GreenGemSeeingEyeRobes_Title', True)
