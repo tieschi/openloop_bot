@@ -46,6 +46,13 @@ class ManageDataBase:
             session.execute(record)
             session.commit()
 
+    def test_select_records(self, records):
+        session = Session(self.engine)
+        result = session.execute(records).all()
+        session.close()
+        # return list(chain(*result))
+        return result
+
 
 class Users(Base):
     __tablename__ = 'users'

@@ -2,8 +2,8 @@ from telebot import TeleBot, types
 from configs import Config
 from services import DataBaseEdit, normalize_message, get_url
 from buttons import get_menu_btn, get_notification_button
-from notifications import notifications
-from threading import Timer
+from notifications import new_notifications
+from threading import Thread, Timer
 
 bot = TeleBot(Config.TELEGRAM_TOKEN)
 db = DataBaseEdit()
@@ -44,7 +44,7 @@ def cmd_delete_all_items(message: types.Message):
 
 @bot.message_handler(commands=['my_items'])
 def cmd_items_list(message: types.Message):
-    items_list = ''
+    items_list = 'items: \n'
     for item, price in db.get_all_users_items_and_price(message.from_user.id).items():
         items_list += item + ' - ' + str(price) + '\n'
     # bot.send_message(chat_id=message.from_user.id, text=item + ' - ' + str(price))
@@ -60,10 +60,13 @@ def timer(func, sec):
     Timer(sec, func).start()
     Timer(sec + 1, lambda: timer(func, sec)).start()
 
-
-if __name__ == '__main__':
-    timer(notifications, 4)
+def main():
     bot.infinity_polling()
 
 
-
+if __name__ == '__main__':
+    timer(new_notifications, 4)
+    th_1 = Thread(target=main)
+    # th_2 = Thread(target=new_notifications)
+    th_1.start()
+    # th_2.start()
