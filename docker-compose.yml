@@ -15,8 +15,16 @@ services:
   bot:
     build: .
     restart: always
-    command: bash -c "python Synchronous_telega.py && python notifications.py"
+    command: bash -c "python Synchronous_telega.py"
     ports:
       - 80:80
     depends_on:
       - db
+
+  notif:
+    build: .
+    restart: always
+    command: bash -c "python notifications.py"
+    depends_on:
+      - db
+
