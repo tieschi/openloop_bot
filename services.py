@@ -83,6 +83,3 @@ class DataBaseEdit:
         record = select(Users.telegram_id, Users.item_name, Users.item_price).order_by(Users.telegram_id)
         return self.records.test_select_records(record)
 
-
-# test = DataBaseEdit()
-# print(test.get_all_telegram_id_items_price()[2][0])

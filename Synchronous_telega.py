@@ -1,9 +1,7 @@
 from telebot import TeleBot, types
 from configs import Config
-from services import DataBaseEdit, normalize_message, get_url
-from buttons import get_menu_btn, get_notification_button
-from notifications import new_notifications
-from threading import Thread, Timer
+from services import DataBaseEdit, normalize_message
+from buttons import get_menu_btn
 
 bot = TeleBot(Config.TELEGRAM_TOKEN)
 db = DataBaseEdit()
@@ -56,17 +54,5 @@ def cmd_items_list(message: types.Message):
         bot.send_message(chat_id=message.from_user.id, text=str(items_list))
 
 
-def timer(func, sec):
-    Timer(sec, func).start()
-    Timer(sec + 1, lambda: timer(func, sec)).start()
-
-def main():
-    bot.infinity_polling()
-
-
 if __name__ == '__main__':
-    timer(new_notifications, 4)
-    th_1 = Thread(target=main)
-    # th_2 = Thread(target=new_notifications)
-    th_1.start()
-    # th_2.start()
+    bot.infinity_polling()
