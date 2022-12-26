@@ -54,9 +54,12 @@ def new_notifications():
             telegram_id = info_list[0]
             item_name = info_list[1]
             item_price = info_list[2]
+            print(db.get_all_telegram_id_items_price())
             try:
                 if item_name in items:
                     notif = db.get_notification_for_item(telegram_id, item_name)
+                    if item_name == 'GreenGemSeeingEyeRobes_Title':
+                        print(telegram_id, notif)
                     if item_price >= items[item_name] and notif:
                         db.update_notification(telegram_id, item_name, False)
                         get_notif(telegram_id, item_name, items[item_name])

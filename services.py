@@ -32,13 +32,12 @@ class DataBaseEdit:
         price = self.records.select_records(record)
         return dict(zip(items, price))
 
-    def save_user_items(self, items: dict, telegram_id):
+    def save_user_items(self, items: dict, telegram_id: int):
         rows = []
         user_items_list = self.get_user_items(telegram_id)
         for item, price in items.items():
             if item in user_items_list:
-                record = update(Users).where(Users.item_name == item
-                                             and Users.telegram_id == telegram_id).values(item_price=price,
+                record = update(Users).where(Users.item_name == item).where(Users.telegram_id == telegram_id).values(item_price=price,
                                                                                           notification=True)
                 self.records.update_record(record)
             else:
@@ -71,8 +70,8 @@ class DataBaseEdit:
         return self.records.select_records(record)
 
     def update_notification(self, telegram_id, item, boole):
-        record = update(Users).where(Users.item_name == item
-                                     and Users.telegram_id == telegram_id).values(notification=boole)
+        record = update(Users).where(Users.item_name == item).where(Users.telegram_id == telegram_id).values(notification=boole)
+        print(record)
         self.records.update_record(record)
 
     def get_notification_for_item(self, telegram_id, item):
@@ -83,3 +82,6 @@ class DataBaseEdit:
         record = select(Users.telegram_id, Users.item_name, Users.item_price).order_by(Users.telegram_id)
         return self.records.test_select_records(record)
 
+
+test = DataBaseEdit()
+test.update_notification(317524011, 'GreenGemSeeingEyeRobes_Title', True)
